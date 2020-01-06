@@ -125,7 +125,18 @@ function LandingPage() {
     }
 
     const updateSearchTerms = (newSearchTerm) => {
+
+        const variables = {
+            skip: 0,
+            limit: Limit,
+            filters: Filters,
+            searchTerm: newSearchTerm
+        }
+
+        setSkip(0)
         setSearchTerms(newSearchTerm)
+
+        getProducts(variables)
     }
 
 
@@ -155,9 +166,9 @@ function LandingPage() {
 
 
             {/* Search  */}
-            <div style={{ display:'flex', justifyContent:'flex-end', margin:'1rem auto' }}>
-                
-                <SearchFeature 
+            <div style={{ display: 'flex', justifyContent: 'flex-end', margin: '1rem auto' }}>
+
+                <SearchFeature
                     refreshFunction={updateSearchTerms}
                 />
 
