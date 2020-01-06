@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react'
 import Axios from 'axios';
 import { Icon, Col, Card, Row } from 'antd';
 import ImageSlider from '../../utils/ImageSlider';
+import CheckBox from './Sections/CheckBox';
 const { Meta } = Card;
 
 function LandingPage() {
@@ -10,6 +11,10 @@ function LandingPage() {
     const [Skip, setSkip] = useState(0)
     const [Limit, setLimit] = useState(8)
     const [PostSize, setPostSize] = useState()
+    const [Filters, setFilters] = useState({
+        continents: [],
+        price: []
+    })
 
     useEffect(() => {
 
@@ -26,17 +31,17 @@ function LandingPage() {
         Axios.post('/api/product/getProducts', variables)
             .then(response => {
                 if (response.data.success) {
-
-                    setProducts([...Products, ...response.data.products])
+                    if (variables.loadMore) {
+                        setProducts([...Products, ...response.data.products])
+                    } else {
+                        setProducts(response.data.products)
+                    }
                     setPostSize(response.data.postSize)
-
                 } else {
                     alert('Failed to fectch product datas')
                 }
             })
     }
-
-
 
     const onLoadMore = () => {
         let skip = Skip + Limit;
@@ -44,6 +49,7 @@ function LandingPage() {
         const variables = {
             skip: skip,
             limit: Limit,
+            loadMore: true
 
         }
         getProducts(variables)
@@ -67,6 +73,34 @@ function LandingPage() {
     })
 
 
+    const showFilteredResults = (filters) => {
+
+        const variables = {
+            skip: 0,
+            limit: Limit,
+            filters: filters
+
+        }
+        getProducts(variables)
+        setSkip(0)
+
+    }
+
+    const handleFilters = (filters, category) => {
+
+        console.log(filters)
+        const newFilters = { ...Filters }
+
+        newFilters[category] = filters
+
+        if (category === "price") {
+
+        }
+
+        showFilteredResults(newFilters)
+        setFilters(newFilters)
+    }
+
 
     return (
         <div style={{ width: '75%', margin: '3rem auto' }}>
@@ -76,6 +110,11 @@ function LandingPage() {
 
 
             {/* Filter  */}
+
+            <CheckBox
+                handleFilters={filters => handleFilters(filters, "continents")}
+            />
+
 
             {/* Search  */}
 
