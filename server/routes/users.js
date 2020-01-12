@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const { User } = require("../models/User");
-
+const { Product } = require('../models/Product');
 const { auth } = require("../middleware/auth");
 
 //=================================
@@ -18,7 +18,7 @@ router.get("/auth", auth, (req, res) => {
         lastname: req.user.lastname,
         role: req.user.role,
         image: req.user.image,
-        cart:req.user.cart,
+        cart: req.user.cart,
         history: req.user.history
     });
 });
@@ -83,7 +83,7 @@ router.get('/addToCart', auth, (req, res) => {
                 duplicate = true;
             }
         })
-        
+
 
         if (duplicate) {
             User.findOneAndUpdate(
@@ -116,6 +116,59 @@ router.get('/addToCart', auth, (req, res) => {
         }
     })
 });
+
+
+router.get('/removeFromCart', auth, (req, res) => {
+
+    User.findOneAndUpdate(
+        { _id: req.user._id },
+        {
+            "$pull":
+                { "cart": { "id": req.query._id } }
+        },
+        { new: true },
+        (err, userInfo) => {
+            let cart = userInfo.cart;
+            let array = cart.map(item => {
+                return item.id
+            })
+
+            Product.find({ '_id': { $in: array } })
+                .populate('writer')
+                .exec((err, cartDetail) => {
+                    return res.status(200).json({
+                        cartDetail,
+                        cart
+                    })
+                })
+        }
+    )
+})
+
+
+router.get('/userCartInfo', auth, (req, res) => {
+    User.findOne(
+        { _id: req.user._id },
+        (err, userInfo) => {
+            let cart = userInfo.cart;
+            let array = cart.map(item => {
+                return item.id
+            })
+
+
+            Product.find({ '_id': { $in: array } })
+                .populate('writer')
+                .exec((err, cartDetail) => {
+                    if (err) return res.status(400).send(err);
+                    return res.status(200).json({ success: true, cartDetail, cart })
+                })
+
+        }
+    )
+})
+
+
+
 
 
 module.exports = router;
