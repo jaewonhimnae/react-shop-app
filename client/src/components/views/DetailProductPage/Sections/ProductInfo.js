@@ -11,6 +11,10 @@ function ProductInfo(props) {
 
     }, [props.detail])
 
+    const addToCarthandler = () => {
+        props.addToCart(props.detail._id)
+    }
+
 
     return (
         <div>
@@ -26,7 +30,7 @@ function ProductInfo(props) {
             <br />
             <div style={{ display: 'flex', justifyContent: 'center' }}>
                 <Button size="large" shape="round" type="danger"
-                    onClick
+                    onClick={addToCarthandler}
                 >
                     Add to Cart
                     </Button>
