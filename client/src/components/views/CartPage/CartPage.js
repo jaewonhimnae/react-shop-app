@@ -2,12 +2,13 @@ import React, { useEffect, useState } from 'react'
 import { useDispatch } from 'react-redux';
 import {
     getCartItems,
-    removeCartItem
+    removeCartItem,
+    onSuccessBuy
 } from '../../../_actions/user_actions';
 import UserCardBlock from './Sections/UserCardBlock';
 import { Result, Empty } from 'antd';
 import Axios from 'axios';
-
+import Paypal from '../../utils/Paypal';
 function CartPage(props) {
     const dispatch = useDispatch();
     const [Total, setTotal] = useState(0)
@@ -67,12 +68,39 @@ function CartPage(props) {
                             alert('Failed to get cart info')
                         }
                     })
-
-
-
-
-
             })
+    }
+
+    const transactionSuccess = (data) => {
+
+        let variables = {
+            cartDetail: props.user.cartDetail, paymentData: data
+        }
+
+        Axios.post('/api/users/successBuy', variables)
+            .then(response => {
+                if (response.data.success) {
+                    setShowSuccess(true)
+                    setShowTotal(false)
+
+                    dispatch(onSuccessBuy({
+                        cart: response.data.cart,
+                        cartDetail: response.data.cartDetail
+                    }))
+
+                } else {
+                    alert('Failed to buy it')
+                }
+            })
+
+    }
+
+    const transactionError = () => {
+        console.log('Paypal error')
+    }
+
+    const transactionCanceled = () => {
+        console.log('Transaction canceled')
     }
 
 
@@ -108,6 +136,24 @@ function CartPage(props) {
                         </div>
                 }
             </div>
+
+
+
+            {/* Paypal Button */}
+
+            {ShowTotal &&
+
+                <Paypal
+                    toPay={Total}
+                    onSuccess={transactionSuccess}
+                    transactionError={transactionError}
+                    transactionCanceled={transactionCanceled}
+                />
+
+            }
+
+
+
         </div>
     )
 }
