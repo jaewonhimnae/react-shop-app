@@ -111,6 +111,7 @@ function UploadProductPage(props) {
                     value={PriceValue}
                     type="number"
                 />
+                <br /><br />
                 <select onChange={onContinentsSelectChange}>
                     {Continents.map(item => (
                         <option key={item.key} value={item.key}>{item.value} </option>
