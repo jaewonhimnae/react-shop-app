@@ -24,20 +24,15 @@ function CartPage(props) {
                     cartItems.push(item.id)
                 });
                 dispatch(getCartItems(cartItems, props.user.userData.cart))
-
+                    .then((response) => {
+                        if (response.payload.length > 0) {
+                            calculateTotal(response.payload)
+                        }
+                    })
             }
         }
 
     }, [props.user.userData])
-
-    useEffect(() => {
-
-        if (props.user.cartDetail && props.user.cartDetail.length > 0) {
-            calculateTotal(props.user.cartDetail)
-        }
-
-
-    }, [props.user.cartDetail])
 
     const calculateTotal = (cartDetail) => {
         let total = 0;
@@ -54,45 +49,26 @@ function CartPage(props) {
     const removeFromCart = (productId) => {
 
         dispatch(removeCartItem(productId))
-            .then(() => {
-
-                Axios.get('/api/users/userCartInfo')
-                    .then(response => {
-                        if (response.data.success) {
-                            if (response.data.cartDetail.length <= 0) {
-                                setShowTotal(false)
-                            } else {
-                                calculateTotal(response.data.cartDetail)
-                            }
-                        } else {
-                            alert('Failed to get cart info')
-                        }
-                    })
+            .then((response) => {
+                if (response.payload.cartDetail.length <= 0) {
+                    setShowTotal(false)
+                } else {
+                    calculateTotal(response.payload.cartDetail)
+                }
             })
     }
 
     const transactionSuccess = (data) => {
-
-        let variables = {
-            cartDetail: props.user.cartDetail, paymentData: data
-        }
-
-        Axios.post('/api/users/successBuy', variables)
+        dispatch(onSuccessBuy({
+            cartDetail: props.user.cartDetail,
+            paymentData: data
+        }))
             .then(response => {
-                if (response.data.success) {
+                if (response.payload.success) {
                     setShowSuccess(true)
                     setShowTotal(false)
-
-                    dispatch(onSuccessBuy({
-                        cart: response.data.cart,
-                        cartDetail: response.data.cartDetail
-                    }))
-
-                } else {
-                    alert('Failed to buy it')
                 }
             })
-
     }
 
     const transactionError = () => {

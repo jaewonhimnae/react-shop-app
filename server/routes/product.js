@@ -46,7 +46,7 @@ router.post("/uploadProduct", auth, (req, res) => {
     const product = new Product(req.body)
 
     product.save((err) => {
-        if (err) returnres.status(400).json({ success: false, err })
+        if (err) return res.status(400).json({ success: false, err })
         return res.status(200).json({ success: true })
     })
 
@@ -111,6 +111,8 @@ router.get("/products_by_id", (req, res) => {
     let type = req.query.type
     let productIds = req.query.id
 
+    console.log("req.query.id", req.query.id)
+
     if (type === "array") {
         let ids = req.query.id.split(',');
         productIds = [];
@@ -119,13 +121,16 @@ router.get("/products_by_id", (req, res) => {
         })
     }
 
+    console.log("productIds", productIds)
+
+
     //we need to find the product information that belong to product Id 
     Product.find({ '_id': { $in: productIds } })
-    .populate('writer')
-    .exec((err, product) => {
-        if(err) return req.status(400).send(err)
-        return res.status(200).send(product)
-    })
+        .populate('writer')
+        .exec((err, product) => {
+            if (err) return res.status(400).send(err)
+            return res.status(200).send(product)
+        })
 });
 
 

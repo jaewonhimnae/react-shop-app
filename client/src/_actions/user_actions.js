@@ -79,6 +79,7 @@ export function getCartItems(cartItems, userCart) {
                     }
                 })
             })
+
             return response.data;
         });
 
@@ -113,9 +114,13 @@ export function removeCartItem(id) {
 
 
 export function onSuccessBuy(data) {
+
+    const request = axios.post(`${USER_SERVER}/successBuy`, data)
+        .then(response => response.data);
+
     return {
         type: ON_SUCCESS_BUY_USER,
-        payload:data
+        payload: request
     }
 }
 

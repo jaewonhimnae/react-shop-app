@@ -55,8 +55,9 @@ function LandingPage() {
         const variables = {
             skip: skip,
             limit: Limit,
-            loadMore: true
-
+            loadMore: true,
+            filters: Filters,
+            searchTerm: SearchTerms
         }
         getProducts(variables)
         setSkip(skip)

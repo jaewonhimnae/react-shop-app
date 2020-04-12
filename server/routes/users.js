@@ -93,7 +93,7 @@ router.get('/addToCart', auth, (req, res) => {
                 { _id: req.user._id, "cart.id": req.query.productId },
                 { $inc: { "cart.$.quantity": 1 } },
                 { new: true },
-                () => {
+                (err, userInfo) => {
                     if (err) return res.json({ success: false, err });
                     res.status(200).json(userInfo.cart)
                 }
