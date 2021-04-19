@@ -9,13 +9,15 @@
 }
 
 .menu__logo {
-  width: 150px;
+  width: 40%;
   float: left;
 }
 
 .menu__logo a {
   display: inline-block;
-  font-size: 20px;
+  font-size: 30px;
+  font-family: 'Druk-Bold';
+  font-style: italic;
   padding: 19px 20px;
 }
 
@@ -37,7 +39,7 @@
 }
 
 .menu__container .menu_left {
-  float: left;
+  float: right;
 }
 
 .menu__container .menu_rigth {
