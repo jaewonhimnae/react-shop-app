@@ -1,16 +1,12 @@
-Hello, My Friends  
-Thank you for having interest in this repository ! 
+# How To Use 
 
-To use this application, 
+1. Create a file inside the config folder and name it `dev.js`
+2. Insert your mongoDB info inside the `dev.js` file
+3. Type `npm install` inside the root directory *(This downloads server dependencies)*
+4. Type `npm install` inside the client directory *(This downloads front-end dependencies)*
 
-1. make dev.js file inside config folder 
-2. put mongoDB info into dev.js file 
-3. Type  " npm install " inside the root directory  ( Download Server Dependencies ) 
-4. Type " npm install " inside the client directory ( Download Front-end Dependencies )
+If you have any problems, feel free to [open an issue](https://github.com/jaewonhimnae/react-shop-app/issues/new) 
 
-If you have problem, feel free to ask me ^^ 
+You can watch the [tutorial](https://www.youtube.com/watch?v=zaWtIkJgah4&t=5569s) on how to use this app.
 
-You can watch the tutorial for this app.
-
-https://www.youtube.com/watch?v=zaWtIkJgah4&t=5569s
-
+*Thank you for your interest in this repository ❤️*
